@@ -78,6 +78,87 @@ public class OfSorts {
 		}
 		
 	}
+	
+	/*
+	 * quick sort partitions based on any pivot element
+	 * chose any element as pivot - maybe the first one
+	 * then have two pointers from low to high, increment the low
+	 * until it finds an element higher than pivot
+	 * decrement the high one until it finds an element lower than pivot
+	 * swap the entries pointed by high and low
+	 * continue until the high and low cross each other
+	 * at this point, swap the pivot with the element at high
+	 */
+	public static int shuffleToPivot(int[] arr,int low,int high)
+	{
+		int pivot = arr[low];
+		int i = low+1;
+		int j = high;
+		
+		//System.out.println(Arrays.toString(arr));
+		
+		while((i<j)&&(i<high)&&(j>low))
+		{
+			while(arr[i]<pivot)
+				i++;
+			while(arr[j]>pivot)
+				j--;
+			
+			if(i<j)
+			{
+			int temp=arr[j];
+			arr[j]=arr[i];
+			arr[i]=temp;
+		//	System.out.println(Arrays.toString(arr));
+			 i++;
+			 j--;
+			}
+
+		}
+		
+		int temp=arr[j];
+		arr[j]=arr[low];
+		arr[low]=temp;
+		System.out.println(Arrays.toString(arr));
+		return j;
+		
+	}
+	
+	public static void quickSort(int[] arr,int low,int high)
+	{
+		if(low>=high)
+			return;
+		
+			int idx = shuffleToPivot(arr,low,high);
+		
+			quickSort(arr,low,idx-1);
+			quickSort(arr,idx+1,high);		
+		
+	}
+	
+	/*
+	 * kth smallest element
+	 * also known as quick select
+	 * 
+	 */
+	
+	public static int kThSmallest(int[] arr, int low,int high,int k)
+	{
+		int idx = shuffleToPivot(arr,low,high);
+		
+		if(idx==(k-1))
+		{
+			return arr[idx];
+			
+		}
+		else
+		{
+			if(idx<k)
+				return kThSmallest(arr,idx+1,high,k);
+			else
+				return kThSmallest(arr,low,idx-1,k);
+		}
+	}
 	public static void main(String[] args) throws Exception
 	{
 		int[] one = new int[3];
@@ -92,9 +173,27 @@ public class OfSorts {
 		two[3]=67;
 		two[4]=78;
 		
-		int[] val = mergeSort(one,3,0,3);
+		//int[] val = mergeSort(one,3,0,3);
 		
-		System.out.println(Arrays.toString(val));
+		//System.out.println(Arrays.toString(val));
+		
+		int[] three = new int[9];
+		three[0]=8;
+		three[1]=13;
+		three[2]=4;
+		three[3]=15;
+		three[4]=6;
+		three[5]=5;
+		three[6]=12;
+		three[7]=15;
+		three[8]=3;
+		
+			//	quickSort(three,0,8);
+			//	System.out.println(Arrays.toString(three));
+		
+		int idx = kThSmallest(three, 0, 8, 6);
+		System.out.println("The 6th smallest:" + idx);
+				
 	}
 
 }
