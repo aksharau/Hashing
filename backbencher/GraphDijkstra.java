@@ -32,6 +32,11 @@ public class GraphDijkstra {
 		int name;
 		int dist;
 		int parent;
+		
+		public String toString()
+		{
+			return "Name:" + name + " Parent: "+ parent + " Dist: " + dist;
+		}
 	};
 	
 	ArrayList<Vertex> heap=null;
@@ -245,7 +250,7 @@ public class GraphDijkstra {
 			int minDist = x.dist;
 			if(!s.contains(x.name))
 			{
-				System.out.println("The next node is: " + x.name + " parent: " + x.parent);
+				System.out.println("The next node is: " + x.name + " parent: " + x.parent + " dist: " + x.dist);
 				s.add(x.name);
 				/* 
 				 * get all outgoing edges from this vertex
@@ -271,6 +276,88 @@ public class GraphDijkstra {
 		}
 	}
 	
+	/*
+	 * It just goes over each edge
+	 * and relaxes the edge
+	 * This loop continues for Number of vertex -1
+	 * Once the loop ends, check if there is any edge
+	 * that was left un-relaxed - this can only happen 
+	 * when there is a -ve cycle - return that there is negative cycle
+	 * else just return the shortest path
+	 */
+	
+	public void shortestPathBellmanFord(int source)
+	{
+		Map<Integer,Vertex> spv = new HashMap<Integer,Vertex>();
+		
+		/*
+		 * Initialize step - all except source
+		 * are initialized with infinite distance
+		 */
+		for(Integer i: map.keySet())
+		{
+			Vertex v = new Vertex();
+			v.name=i;
+			//System.out.println("Adding to heap: "+ i);
+			if(i==source)
+			{				
+				v.dist=0;
+				v.parent=source;
+			}
+			else
+			{
+				v.dist=1000;
+			}
+			spv.put(i,v);
+		}
+		
+		for(int i=1;i<map.keySet().size();i++)
+		{
+			/* 
+			 * Go over each edge, for this
+			 * go over each item in the array list of 
+			 * adjacency list
+			 * Relax the edges
+			 */
+			//Integer[] keyArr = (Integer[]) map.keySet().toArray();
+			for(Integer key: map.keySet())
+			{
+				for(Vertex v: map.get(key))
+				{
+					Vertex fromSpvV = spv.get(v.name);
+					Vertex fromSpvU = spv.get(key);
+					if(fromSpvV.dist>(v.dist+fromSpvU.dist))
+							{
+								fromSpvV.dist=v.dist+fromSpvU.dist;
+								fromSpvV.parent = fromSpvU.name;
+							}
+				}
+			}
+			
+			
+		}
+		
+		/*
+		 * Check for -ve edges
+		 */
+		
+		for(Integer key: map.keySet())
+		{
+			for(Vertex v: map.get(key))
+			{
+				Vertex fromSpvV = spv.get(v.name);
+				Vertex fromSpvU = spv.get(key);
+				if(fromSpvV.dist>(v.dist+fromSpvU.dist))
+						{
+							System.out.println("There is a negtaive loop:" );
+							return;
+						}
+			}
+		}
+		
+		System.out.println("The map is:" + spv.toString());
+	}
+	
 	
 	public static void main(String[] args) throws Exception
 	{
@@ -293,14 +380,45 @@ public class GraphDijkstra {
 		
 		gr.shortestPath(0);
 		
+		
 		/*
-		 * The next node is: 0 parent: 0
-		   The next node is: 1 parent: 0
-		   The next node is: 7 parent: 0
-		   The next node is: 6 parent: 7
-		   The next node is: 2 parent: 1
-		   The next node is: 8 parent: 2
+		 * The next node is: 0 parent: 0 dist: 0
+		   The next node is: 1 parent: 0 dist: 4
+           The next node is: 7 parent: 0 dist: 8
+           The next node is: 6 parent: 7 dist: 9
+           The next node is: 2 parent: 1 dist: 12
+           The next node is: 8 parent: 2 dist: 14
 		 */
+		
+		gr.shortestPathBellmanFord(0);
+		/*
+		The map is:
+		{0=Name:0 Parent: 0 Dist: 0, 
+		 1=Name:1 Parent: 0 Dist: 4, 
+		 2=Name:2 Parent: 1 Dist: 12, 
+		 6=Name:6 Parent: 7 Dist: 9, 
+		 7=Name:7 Parent: 0 Dist: 8, 
+		 8=Name:8 Parent: 2 Dist: 14}
+		 */
+		
+		GraphDijkstra gr2 = new GraphDijkstra();
+		gr2.addVertex(0);
+		gr2.addVertex(1);
+		gr2.addVertex(2);
+		gr2.addVertex(3);
+		
+		gr2.addEdge(0, 3, 1);
+		gr2.addEdge(0, 4, 2);
+		gr2.addEdge(2, -4, 1);
+		gr2.addEdge(1, 5, 3);
+		gr2.addEdge(3, -2, 2);
+		
+		gr2.shortestPathBellmanFord(0);
+		
+		/*
+		 * There is a negtaive loop:
+		 */
+
 	}
 
 }
