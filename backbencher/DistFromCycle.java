@@ -149,6 +149,9 @@ public class DistFromCycle {
 			}
 		}
 
+		
+		//for the nodes we could not find the distance yet
+		// check the distance of parent 
 		for(int i=0;i<g_nodes;i++)
 		{
 			if(dist[i]==-1)
@@ -159,6 +162,8 @@ public class DistFromCycle {
 		return dist;
 	}
 
+	//gets the distance of the current node from it's parent node
+	
 	public int getDist(int current,int[] parent,int[] dist,Map<Integer,ArrayList<Integer>> graph,Map<Integer,ArrayList<Integer>> bigraph)
 	{
 
@@ -198,6 +203,11 @@ public class DistFromCycle {
 		return ans;
 	}
 
+	
+	//This detects the cycle
+	// Also populates the distance when the cycle is detected
+	// populates the parent information while doing dfs
+	
 	public void dfs(int current,int[] color,int[] parent,int[] dist, Map<Integer,ArrayList<Integer>> graph)
 	{
 		if(color[current]!=0)
