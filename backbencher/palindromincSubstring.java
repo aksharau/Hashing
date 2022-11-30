@@ -27,7 +27,7 @@ public class palindromincSubstring {
          else
          {
              int countA = getCount(s,start+1,end);
-             int countB= getCount(s,start,end+1);
+             int countB= getCount(s,start,end-1);
              return countA+countB;
          }
      }
