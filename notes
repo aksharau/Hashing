@@ -1,0 +1,63 @@
+The Order object is created here:
+https://github.com/apache/ofbiz-framework/blob/f6a2af5be6b3975d394352308d32368714d3621e/applications/order/src/main/java/org/apache/ofbiz/order/order/OrderServices.java#L585C13-L585C22
+
+
+There are no SQL, but DSLs like so
+
+https://github.com/apache/ofbiz-framework/blob/f6a2af5be6b3975d394352308d32368714d3621e/applications/order/src/main/java/org/apache/ofbiz/order/order/OrderServices.java#L769
+
+                        techDataCalendarExcDay = EntityQuery.use(delegator).from("TechDataCalendarExcDay").where("calendarId", fixedAsset.get(
+
+
+Delegator is from
+
+  public static Map<String, Object> createOrder(DispatchContext ctx, Map<String, ? extends Object> context) {
+        Delegator delegator = ctx.getDelegator();
+  
+
+
+The DispatchContext is here
+
+https://github.com/apache/ofbiz-framework/blob/f6a2af5be6b3975d394352308d32368714d3621e/framework/service/src/main/java/org/apache/ofbiz/service/DispatchContext.java#L54
+
+
+The Delegator is here
+
+https://github.com/apache/ofbiz-framework/blob/f6a2af5be6b3975d394352308d32368714d3621e/framework/entity/src/main/java/org/apache/ofbiz/entity/Delegator.java
+
+
+This calls the GenericValue.create
+
+
+https://github.com/apache/ofbiz-framework/blob/f6a2af5be6b3975d394352308d32368714d3621e/framework/entity/src/main/java/org/apache/ofbiz/entity/GenericValue.java
+
+
+This is the place where entity is being created, there are transaction helpers
+
+https://github.com/apache/ofbiz-framework/blob/f6a2af5be6b3975d394352308d32368714d3621e/framework/entity/src/main/java/org/apache/ofbiz/entity/GenericDelegator.java#L872
+
+The GenericEntityHelper is the one that creates the entity
+
+
+https://github.com/apache/ofbiz-framework/blob/f6a2af5be6b3975d394352308d32368714d3621e/framework/entity/src/main/java/org/apache/ofbiz/entity/GenericDelegator.java#L570
+
+This is the DAO that implements the GenericHelper
+
+https://github.com/apache/ofbiz-framework/blob/f6a2af5be6b3975d394352308d32368714d3621e/framework/entity/src/main/java/org/apache/ofbiz/entity/datasource/GenericHelperDAO.java#L43
+
+
+The Sql statements are prepared here:
+
+https://github.com/apache/ofbiz-framework/blob/f6a2af5be6b3975d394352308d32368714d3621e/framework/entity/src/main/java/org/apache/ofbiz/entity/datasource/GenericDAO.java#L110
+
+and executed by below
+JDBC is happening here
+
+https://github.com/apache/ofbiz-framework/blob/f6a2af5be6b3975d394352308d32368714d3621e/framework/entity/src/main/java/org/apache/ofbiz/entity/jdbc/SQLProcessor.java#L436
+
+----------------------------------
+
+So need to check via LLM, if it can locate the places where the INSERT,UPDATE and SELECT sql statements are generated.
+And if the generated Sql statements are compatible with CSP
+
+
